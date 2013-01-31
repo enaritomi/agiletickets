@@ -51,16 +51,24 @@ public class EspetaculosController {
 		// aqui eh onde fazemos as varias validacoes
 		// se nao tiver nome, avisa o usuario
 		// se nao tiver descricao, avisa o usuario
-		if (Strings.isNullOrEmpty(espetaculo.getNome())) {
-			validator.add(new ValidationMessage("Nome do espetáculo nao pode estar em branco", ""));
-		}
-		if (Strings.isNullOrEmpty(espetaculo.getDescricao())) {
-			validator.add(new ValidationMessage("Descricao do espetaculo nao pode estar em branco", ""));
-		}
+		validaNome(espetaculo);
+		validaDescricao(espetaculo);
 		validator.onErrorRedirectTo(this).lista();
 
 		agenda.cadastra(espetaculo);
 		result.redirectTo(this).lista();
+	}
+
+	private void validaDescricao(Espetaculo espetaculo) {
+		if (Strings.isNullOrEmpty(espetaculo.getDescricao())) {
+			validator.add(new ValidationMessage("Descricao do espetaculo nao pode estar em branco", ""));
+		}
+	}
+
+	private void validaNome(Espetaculo espetaculo) {
+		if (Strings.isNullOrEmpty(espetaculo.getNome())) {
+			validator.add(new ValidationMessage("Nome do espetáculo nao pode estar em branco", ""));
+		}
 	}
 
 
@@ -82,13 +90,9 @@ public class EspetaculosController {
 			return;
 		}
 
-		if (quantidade < 1) {
-			validator.add(new ValidationMessage("Voce deve escolher um lugar ou mais", ""));
-		}
+		validaQuantidade(quantidade);
 
-		if (!sessao.podeReservar(quantidade)) {
-			validator.add(new ValidationMessage("Nao existem ingressos dispon√≠veis", ""));
-		}
+		validaReserva(quantidade, sessao);
 
 		// em caso de erro, redireciona para a lista de sessao
 		validator.onErrorRedirectTo(this).sessao(sessao.getId());
@@ -97,6 +101,18 @@ public class EspetaculosController {
 		result.include("message", "Sessao reservada com sucesso");
 
 		result.redirectTo(IndexController.class).index();
+	}
+
+	private void validaReserva(final Integer quantidade, Sessao sessao) {
+		if (!sessao.podeReservar(quantidade)) {
+			validator.add(new ValidationMessage("Nao existem ingressos dispon√≠veis", ""));
+		}
+	}
+
+	private void validaQuantidade(final Integer quantidade) {
+		if (quantidade < 1) {
+			validator.add(new ValidationMessage("Voce deve escolher um lugar ou mais", ""));
+		}
 	}
 
 	@Get @Path("/espetaculo/{espetaculoId}/sessoes")
