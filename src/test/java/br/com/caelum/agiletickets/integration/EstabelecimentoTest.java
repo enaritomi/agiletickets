@@ -1,5 +1,10 @@
 package br.com.caelum.agiletickets.integration;
 
+import static org.junit.Assert.*;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 
 public class EstabelecimentoTest {
 
@@ -12,6 +17,11 @@ public class EstabelecimentoTest {
 //		browser = new FirefoxDriver();
 //	}
 //
+	@Test
+	public void bla() throws Exception {
+		Assert.assertTrue(true);
+	}
+	
 //	@Before
 //	public void setUp() throws Exception {
 //		estabelecimentos = new EstabelecimentosDriver(browser);
